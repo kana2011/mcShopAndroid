@@ -8,6 +8,7 @@ import android.app.LoaderManager.LoaderCallbacks;
 import android.content.ContentResolver;
 import android.content.CursorLoader;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -36,12 +37,15 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * A login screen that offers login via email/password.
@@ -248,6 +252,8 @@ public class LoginActivity extends ActionBarActivity implements LoaderCallbacks<
 
                 nameValuePairs.add(new BasicNameValuePair("username", this.mUsername));
                 nameValuePairs.add(new BasicNameValuePair("password", this.mPassword));
+                nameValuePairs.add(new BasicNameValuePair("generateToken", "true"));
+                nameValuePairs.add(new BasicNameValuePair("appname", "Android"));
                 httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
                 HttpResponse response = httpclient.execute(httppost);
@@ -255,8 +261,17 @@ public class LoginActivity extends ActionBarActivity implements LoaderCallbacks<
                 String result = EntityUtils.toString(response.getEntity());
                 JSONParser parser = new JSONParser();
                 JSONObject json = (JSONObject)parser.parse(result);
-                System.out.println(json.get("status"));
                 if((Boolean)json.get("status")) {
+                    SharedPreferences.Editor editor = MainActivity.settings.edit();
+                    JSONArray credentials = (JSONArray)parser.parse(MainActivity.settings.getString("credentiald", "[]"));
+                    MainActivity.logged = true;
+                    MainActivity.credentialsIndex = credentials.size();
+                    JSONObject credential = new JSONObject();
+                    credential.put("address", this.mAddress);
+                    credential.put("token", json.get("token"));
+                    credentials.add(credential);
+                    editor.putString("credentials", credentials.toString());
+                    editor.commit();
                     return true;
                 } else {
                     showCredentialsError();

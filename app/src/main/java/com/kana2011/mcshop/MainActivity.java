@@ -10,28 +10,41 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toolbar;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+
 import java.util.HashSet;
 import java.util.Set;
 
 public class MainActivity extends ActionBarActivity {
     public String PREFS_NAME = "com.kana2011.mcShop";
+    public static SharedPreferences settings;
+    public static Boolean logged = false;
+    public static int credentialsIndex = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        settings = getSharedPreferences(PREFS_NAME, 0);
         if(settings.contains("credentials")) {
-            Set<String> credentials = settings.getStringSet("credentials", new HashSet<String>());
-            if(credentials.size() > 0) {
+            JSONParser parser = new JSONParser();
+            try {
+                JSONArray credentials = (JSONArray)parser.parse(settings.getString("credentials", "[]"));
+                if (credentials.size() > 0) {
+                    System.out.println(((JSONObject)credentials.get(0)).get("token"));
+                } else {
+                    this.showLogin();
+                }
+            } catch (Exception e) {
 
-            } else {
-                this.showLogin();
             }
         } else {
             SharedPreferences.Editor editor = settings.edit();
-            editor.putStringSet("credentials", new HashSet<String>());
+            editor.putString("credentials", "{}");
+            editor.commit();
             this.showLogin();
         }
     }
