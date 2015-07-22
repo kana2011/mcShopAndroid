@@ -1,17 +1,44 @@
-package mcshop.kana2011.com.mcshop;
+package com.kana2011.mcshop;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.os.Build;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toolbar;
 
+import java.util.HashSet;
+import java.util.Set;
 
 public class MainActivity extends ActionBarActivity {
+    public String PREFS_NAME = "com.kana2011.mcShop";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        if(settings.contains("credentials")) {
+            Set<String> credentials = settings.getStringSet("credentials", new HashSet<String>());
+            if(credentials.size() > 0) {
+
+            } else {
+                this.showLogin();
+            }
+        } else {
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putStringSet("credentials", new HashSet<String>());
+            this.showLogin();
+        }
+    }
+
+    public void showLogin() {
+        Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
+        MainActivity.this.startActivity(loginIntent);
     }
 
     @Override

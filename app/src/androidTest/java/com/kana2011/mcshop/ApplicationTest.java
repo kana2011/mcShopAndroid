@@ -1,4 +1,4 @@
-package mcshop.kana2011.com.mcshop;
+package com.kana2011.mcshop;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
