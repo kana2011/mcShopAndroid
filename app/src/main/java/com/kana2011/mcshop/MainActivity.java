@@ -1,27 +1,30 @@
 package com.kana2011.mcshop;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.os.Build;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toolbar;
 
+import com.kana2011.mcshop.utils.Util;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends ActionBarActivity {
     public String PREFS_NAME = "com.kana2011.mcShop";
     public static SharedPreferences settings;
     public static Boolean logged = false;
-    public static int credentialsIndex = 0;
+    public static int currentCredential = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,25 +36,80 @@ public class MainActivity extends ActionBarActivity {
             JSONParser parser = new JSONParser();
             try {
                 JSONArray credentials = (JSONArray)parser.parse(settings.getString("credentials", "[]"));
-                if (credentials.size() > 0) {
-                    System.out.println(((JSONObject)credentials.get(0)).get("token"));
+                if (credentials.size() >= (settings.getInt("currentCredential", 0) + 1)) {
+                    String token = (String)((JSONObject)credentials.get(settings.getInt("currentCredential", 0))).get("token");
+                    String res = this.checkAuth(token);
+                    if(res == "success") {
+                        System.out.println("Success!");
+                    } else if(res == "error") {
+                        final MainActivity m = this;
+                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                        builder.setMessage("No connection.")
+                                .setCancelable(false)
+                                .setPositiveButton("Exit", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        m.finish();
+                                    }
+                                });
+                        AlertDialog alert = builder.create();
+                        alert.show();
+                    } else {final MainActivity m = this;
+                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                        builder.setMessage("Session expired. Please login again.")
+                                .setCancelable(false)
+                                .setPositiveButton("Login", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        m.resetCredentials();
+                                        m.showLogin();
+                                    }
+                                });
+                        AlertDialog alert = builder.create();
+                        alert.show();
+                    }
                 } else {
                     this.showLogin();
+                    this.resetCredentials();
                 }
             } catch (Exception e) {
-
+                this.resetCredentials();
+                this.showLogin();
             }
         } else {
-            SharedPreferences.Editor editor = settings.edit();
-            editor.putString("credentials", "{}");
-            editor.commit();
+            this.resetCredentials();
             this.showLogin();
+        }
+    }
+
+    public void resetCredentials() {
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("credentials", "[]");
+        editor.remove("currentCredential");
+        editor.commit();
+    }
+
+    public String checkAuth(String token) {
+        List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>(2);
+        nameValuePairList.add(new BasicNameValuePair("token", token));
+        try {
+            JSONParser parser = new JSONParser();
+            JSONArray credentials = (JSONArray)parser.parse(settings.getString("credentials", "[]"));
+            String address = (String)((JSONObject)credentials.get(settings.getInt("currentCredential", 0))).get("address");
+            JSONObject res = (JSONObject)parser.parse(Util.postData(address + "/api/auth:tokenLogin", nameValuePairList));
+            if((Boolean)((JSONObject)parser.parse(Util.postData(address + "/api/auth:tokenLogin", nameValuePairList))).get("status")) {
+                return "success";
+            } else {
+                return "failed";
+            }
+        } catch (Exception e) {
+            return "error";
         }
     }
 
     public void showLogin() {
         Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
-        MainActivity.this.startActivity(loginIntent);
+        loginIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(loginIntent);
+        finish();
     }
 
     @Override
@@ -67,11 +125,6 @@ public class MainActivity extends ActionBarActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
 
         return super.onOptionsItemSelected(item);
     }

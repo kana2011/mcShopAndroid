@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.ContentResolver;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -243,10 +244,13 @@ public class LoginActivity extends ActionBarActivity implements LoaderCallbacks<
 
         @Override
         protected Boolean doInBackground(Void... params) {
-
             HttpClient httpclient = new DefaultHttpClient();
 
-            HttpPost httppost = new HttpPost("http://192.168.10.134/api/auth:login");
+            String realAddress = mAddress;
+            if(!realAddress.contains("http://") && !realAddress.contains("https://")) {
+                realAddress = "http://" + realAddress;
+            }
+            HttpPost httppost = new HttpPost(realAddress + "/api/auth:login");
             try {
                 List nameValuePairs = new ArrayList();
 
@@ -265,11 +269,12 @@ public class LoginActivity extends ActionBarActivity implements LoaderCallbacks<
                     SharedPreferences.Editor editor = MainActivity.settings.edit();
                     JSONArray credentials = (JSONArray)parser.parse(MainActivity.settings.getString("credentiald", "[]"));
                     MainActivity.logged = true;
-                    MainActivity.credentialsIndex = credentials.size();
+                    MainActivity.currentCredential = credentials.size();
                     JSONObject credential = new JSONObject();
-                    credential.put("address", this.mAddress);
+                    credential.put("address", realAddress);
                     credential.put("token", json.get("token"));
                     credentials.add(credential);
+                    editor.putInt("currentCredential", MainActivity.currentCredential);
                     editor.putString("credentials", credentials.toString());
                     editor.commit();
                     return true;
@@ -285,7 +290,7 @@ public class LoginActivity extends ActionBarActivity implements LoaderCallbacks<
         }
 
         private void showCredentialsError() {
-            handler.post(new Runnable() { // This thread runs in the UI
+            handler.post(new Runnable() {
                 @Override
                 public void run() {
                     mPasswordView.setError(getString(R.string.error_incorrect_password));
@@ -295,7 +300,7 @@ public class LoginActivity extends ActionBarActivity implements LoaderCallbacks<
         }
 
         private void showAddressError() {
-            handler.post(new Runnable() { // This thread runs in the UI
+            handler.post(new Runnable() {
                 @Override
                 public void run() {
                     mAddressView.setError(getString(R.string.error_no_connection));
@@ -310,7 +315,7 @@ public class LoginActivity extends ActionBarActivity implements LoaderCallbacks<
             showProgress(false);
 
             if (success) {
-                finish();
+                finishWithResult(true);
             }
         }
 
@@ -318,6 +323,18 @@ public class LoginActivity extends ActionBarActivity implements LoaderCallbacks<
         protected void onCancelled() {
             mAuthTask = null;
             showProgress(false);
+        }
+
+        private void finishWithResult(Boolean success)
+        {
+            Intent data = new Intent();
+            data.putExtra("success", success);
+            if (getParent() == null) {
+                setResult(Activity.RESULT_OK, data);
+            } else {
+                getParent().setResult(Activity.RESULT_OK, data);
+            }
+            finish();
         }
     }
 }
