@@ -6,4 +6,12 @@
         <item name="colorPrimaryDark">@color/md_green_700</item>
     </style>
 
+    <style name="GreenNavigationDrawerTheme" parent="MaterialNavigationDrawerTheme">
+        <item name="colorPrimary">@color/md_green_500</item>
+        <item name="colorPrimaryDark">@color/md_green_700</item>
+        <item name="multipaneSupport">true</item>
+        <item name="learningPattern">false</item>
+        <item name="toolbarElevation">true</item>
+    </style>
+
 </resources>

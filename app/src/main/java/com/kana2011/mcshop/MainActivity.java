@@ -40,7 +40,9 @@ public class MainActivity extends ActionBarActivity {
                     String token = (String)((JSONObject)credentials.get(settings.getInt("currentCredential", 0))).get("token");
                     String res = this.checkAuth(token);
                     if(res == "success") {
-                        System.out.println("Success!");
+                        Intent homeIntent = new Intent(MainActivity.this, HomeActivity.class);
+                        startActivity(homeIntent);
+                        finish();
                     } else if(res == "error") {
                         final MainActivity m = this;
                         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -107,7 +109,6 @@ public class MainActivity extends ActionBarActivity {
 
     public void showLogin() {
         Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
-        loginIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(loginIntent);
         finish();
     }

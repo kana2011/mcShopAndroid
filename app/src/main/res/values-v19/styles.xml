@@ -5,4 +5,13 @@
         <item name="android:windowTranslucentNavigation">true</item>
     </style>
 
+    <style name="GreenNavigationDrawerTheme" parent="MaterialNavigationDrawerTheme.Light.DarkActionBar">
+        <item name="colorPrimary">@color/md_green_500</item>
+        <item name="colorPrimaryDark">@color/md_green_700</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="multipaneSupport">true</item>
+        <item name="learningPattern">false</item>
+        <item name="android:textColor">@color/md_black_1000</item>
+    </style>
+
 </resources>
