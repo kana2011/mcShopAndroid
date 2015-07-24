@@ -16,4 +16,10 @@
         <item name="android:textColor">@color/md_white_1000</item>
     </style>
 
+    <style name="McShopToolbarPopupTheme" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:textColorPrimary">@color/md_black_1000</item>
+        <item name="android:textColorSecondary">@color/md_black_1000</item>
+        <item name="android:textColor">@color/md_black_1000</item>
+    </style>
+
 </resources>

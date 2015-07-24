@@ -62,8 +62,8 @@ public class NavigationDrawerFragment extends Fragment {
 
     public static List<DrawerItem> getData() {
         List<DrawerItem> data = new ArrayList<>();
-        int[] icons = {R.drawable.ic_home, R.drawable.ic_shopping_cart, R.drawable.ic_credit_card, R.drawable.ic_credit_card};
-        String[] titles = {"Home", "Shop", "Topup", "Transaction"};
+        int[] icons = {R.drawable.ic_shopping_cart, R.drawable.ic_credit_card, R.drawable.ic_view_headline};
+        String[] titles = {"Shop", "Topup", "Transaction"};
         for(int i = 0; i < icons.length; i++) {
             DrawerItem current = new DrawerItem();
             current.iconId = icons[i];

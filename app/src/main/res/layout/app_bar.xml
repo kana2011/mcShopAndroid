@@ -6,6 +6,6 @@
     android:paddingTop="@dimen/app_bar_top_padding"
     android:background="@color/md_light_green_500"
     app:theme="@style/McShopToolbarTheme"
-    app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+    app:popupTheme="@style/McShopToolbarPopupTheme">
 
 </android.support.v7.widget.Toolbar>

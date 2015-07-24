@@ -43,6 +43,10 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
         DrawerItem current = data.get(position);
         holder.mTitleView.setText(current.title);
         holder.mIconView.setImageResource(current.iconId);
+        System.out.println(position);
+        if(position == 0) {
+            holder.mItemView.setSelected(true);
+        }
     }
 
     @Override
@@ -67,7 +71,6 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
         public void onClick(View v) {
             HomeActivity.getInstance().getDrawerFragment().getDrawerLayout().closeDrawers();
             HomeActivity.getInstance().showFragment(getPosition());
-            //Toast.makeText(context, getPosition() + " clicked", Toast.LENGTH_SHORT).show();
         }
     }
 }
