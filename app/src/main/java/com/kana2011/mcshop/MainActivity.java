@@ -1,5 +1,7 @@
 package com.kana2011.mcshop;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -23,7 +25,6 @@ import java.util.List;
 public class MainActivity extends ActionBarActivity {
     public String PREFS_NAME = "com.kana2011.mcShop";
     public static SharedPreferences settings;
-    public static Boolean logged = false;
     public static int currentCredential = 0;
 
     @Override
@@ -31,7 +32,7 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        settings = getSharedPreferences(PREFS_NAME, 0);
+        settings = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         if(settings.contains("credentials")) {
             JSONParser parser = new JSONParser();
             try {
@@ -90,12 +91,12 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public String checkAuth(String token) {
-        List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>(2);
-        nameValuePairList.add(new BasicNameValuePair("token", token));
         try {
             JSONParser parser = new JSONParser();
             JSONArray credentials = (JSONArray)parser.parse(settings.getString("credentials", "[]"));
             String address = (String)((JSONObject)credentials.get(settings.getInt("currentCredential", 0))).get("address");
+            List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>(2);
+            nameValuePairList.add(new BasicNameValuePair("token", token));
             JSONObject res = (JSONObject)parser.parse(Util.postData(address + "/api/auth:tokenLogin", nameValuePairList));
             if((Boolean)((JSONObject)parser.parse(Util.postData(address + "/api/auth:tokenLogin", nameValuePairList))).get("status")) {
                 return "success";

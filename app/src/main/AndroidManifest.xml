@@ -25,7 +25,6 @@
         </activity>
         <activity
             android:name=".HomeActivity"
-            android:theme="@style/GreenNavigationDrawerTheme"
             android:label="@string/title_activity_home" >
         </activity>
     </application>

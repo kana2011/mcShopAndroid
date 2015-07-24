@@ -268,7 +268,6 @@ public class LoginActivity extends ActionBarActivity implements LoaderCallbacks<
                 if((Boolean)json.get("status")) {
                     SharedPreferences.Editor editor = MainActivity.settings.edit();
                     JSONArray credentials = (JSONArray)parser.parse(MainActivity.settings.getString("credentiald", "[]"));
-                    MainActivity.logged = true;
                     MainActivity.currentCredential = credentials.size();
                     JSONObject credential = new JSONObject();
                     credential.put("address", realAddress);
