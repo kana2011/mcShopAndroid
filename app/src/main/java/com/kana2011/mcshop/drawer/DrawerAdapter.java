@@ -70,7 +70,9 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
         @Override
         public void onClick(View v) {
             HomeActivity.getInstance().getDrawerFragment().getDrawerLayout().closeDrawers();
-            HomeActivity.getInstance().showFragment(getPosition());
+            if(getPosition() != 0) {
+                HomeActivity.getInstance().showFragment(getPosition());
+            }
         }
     }
 }
