@@ -40,11 +40,11 @@ public class MainActivity extends ActionBarActivity {
                 if (credentials.size() >= (settings.getInt("currentCredential", 0) + 1)) {
                     String token = (String)((JSONObject)credentials.get(settings.getInt("currentCredential", 0))).get("token");
                     String res = this.checkAuth(token);
-                    if(res == "success") {
+                    if(res.equals("success")) {
                         Intent homeIntent = new Intent(MainActivity.this, HomeActivity.class);
                         startActivity(homeIntent);
                         finish();
-                    } else if(res == "error") {
+                    } else if(res.equals("error")) {
                         final MainActivity m = this;
                         AlertDialog.Builder builder = new AlertDialog.Builder(this);
                         builder.setMessage("No connection.")
@@ -56,7 +56,8 @@ public class MainActivity extends ActionBarActivity {
                                 });
                         AlertDialog alert = builder.create();
                         alert.show();
-                    } else {final MainActivity m = this;
+                    } else {
+                        final MainActivity m = this;
                         AlertDialog.Builder builder = new AlertDialog.Builder(this);
                         builder.setMessage("Session expired. Please login again.")
                                 .setCancelable(false)
@@ -70,8 +71,8 @@ public class MainActivity extends ActionBarActivity {
                         alert.show();
                     }
                 } else {
-                    this.showLogin();
                     this.resetCredentials();
+                    this.showLogin();
                 }
             } catch (Exception e) {
                 this.resetCredentials();

@@ -43,7 +43,6 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
         DrawerItem current = data.get(position);
         holder.mTitleView.setText(current.title);
         holder.mIconView.setImageResource(current.iconId);
-        System.out.println(position);
         if(position == 0) {
             holder.mItemView.setSelected(true);
         }

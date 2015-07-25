@@ -15,9 +15,4 @@
 
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
-    
-    <string-array name="drawerItems">
-        <item>Home</item>
-        <item>Shop</item>
-    </string-array>
 </resources>
