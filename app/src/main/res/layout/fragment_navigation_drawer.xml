@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/linearLayout">
         <ImageView
-            android:layout_width="280dp"
+            android:layout_width="wrap_content"
             android:layout_height="192dp"
             android:src="@drawable/ic_bg"
             android:layout_marginTop="@dimen/drawer_margin_top" />
