@@ -3,9 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="@dimen/app_bar_top_padding"
     android:background="@color/md_light_green_500"
     app:theme="@style/McShopToolbarTheme"
     app:popupTheme="@style/McShopToolbarPopupTheme">
+
+    <!--android:paddingTop="@dimen/app_bar_top_padding"-->
 
 </android.support.v7.widget.Toolbar>

@@ -3,9 +3,18 @@
     android:layout_height="match_parent"
     tools:context="com.kana2011.mcshop.SettingsActivity">
 
+    <View
+        android:id="@+id/tint"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/app_bar_top_padding"
+        android:background="@color/md_light_green_700"/>
+
     <include
         android:id="@+id/app_bar"
-        layout="@layout/app_bar" />
+        layout="@layout/app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tint"/>
 
     <LinearLayout
         android:id="@+id/settings_fragment"

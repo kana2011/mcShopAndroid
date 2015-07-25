@@ -5,16 +5,23 @@
     android:background="@color/md_grey_100"
     tools:context="com.kana2011.mcshop.drawer.NavigationDrawerFragment">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="192dp"
         android:id="@+id/linearLayout">
         <ImageView
+            android:id="@+id/cover"
             android:layout_width="280dp"
             android:layout_height="192dp"
             android:src="@drawable/ic_bg"
-            android:layout_marginTop="@dimen/drawer_margin_top" />
-    </LinearLayout>
+            android:layout_marginTop="@dimen/drawer_margin_top"/>
+        <View
+            android:id="@+id/tint"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/app_bar_top_padding"
+            android:layout_alignParentTop="true"
+            android:background="#B6000000"/>
+    </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/drawer_list"
