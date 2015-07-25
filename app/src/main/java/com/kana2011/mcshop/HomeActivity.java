@@ -1,5 +1,6 @@
 package com.kana2011.mcshop;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -37,6 +38,7 @@ public class HomeActivity extends ActionBarActivity {
     private NavigationDrawerFragment drawerFragment;
     private Toolbar toolbar;
     private static HomeActivity instance;
+    private JSONObject userinfo;
 
     private List<Fragment> fragments = new ArrayList<>();
 
@@ -59,12 +61,20 @@ public class HomeActivity extends ActionBarActivity {
         JSONParser parser = new JSONParser();
         try {
             JSONArray credentials = (JSONArray) parser.parse(settings.getString("credentials", "[]"));
-            String address = (String) ((JSONObject) credentials.get(settings.getInt("currentCredential", 0))).get("address");
-            String token = (String) ((JSONObject) credentials.get(settings.getInt("currentCredential", 0))).get("token");
+            JSONObject credential = (JSONObject) credentials.get(settings.getInt("currentCredential", 0));
+            String address = (String) credential.get("address");
+            String token = (String) credential.get("token");
+
             List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>(2);
             nameValuePairList.add(new BasicNameValuePair("token", token));
-            JSONObject res = (JSONObject)parser.parse(Util.postData(address + "/api/shop:getall", nameValuePairList));
-            JSONArray groups = (JSONArray)res.get("result");
+            userinfo = (JSONObject)parser.parse(Util.postData(address + "/api/user:shop", nameValuePairList));
+
+            SharedPreferences.Editor editor = settings.edit();
+            credential.put("username", userinfo.get("username"));
+            editor.putString("credentials", credentials.toString());
+            editor.commit();
+
+            JSONArray groups = (JSONArray)userinfo.get("shop");
             ShopFragment fragment = new ShopFragment();
             fragment.setGroupsInfo(groups);
             fragments.add(fragment);
@@ -96,6 +106,8 @@ public class HomeActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent settingsIntent = new Intent(HomeActivity.this, SettingsActivity.class);
+            startActivity(settingsIntent);
             return true;
         }
 

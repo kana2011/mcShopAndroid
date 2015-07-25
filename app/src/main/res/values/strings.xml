@@ -15,4 +15,16 @@
 
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
+
+    <string name="title_activity_settings">Settings</string>
+    <string name="settings_authentication">Authentication</string>
+
+    <string name="settings_accounts">Accounts</string>
+    <string name="settings_accounts_new">New account</string>
+    <string name="settings_accounts_summary">Choose an account for the app to use</string>
+
+    <string name="settings_signout">Sign out</string>
+    <string name="settings_signout_summary">Remove selected acount from this device</string>
+    <string name="settings_signout_content">You won\'t be able to access this account unless you sign in again.</string>
+
 </resources>
