@@ -6,6 +6,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
@@ -23,7 +24,9 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -53,13 +56,6 @@ import java.util.Set;
  */
 public class LoginActivity extends ActionBarActivity implements LoaderCallbacks<Cursor> {
 
-    /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "foo@example.com:hello", "bar@example.com:world"
-    };
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -102,6 +98,8 @@ public class LoginActivity extends ActionBarActivity implements LoaderCallbacks<
                 attemptLogin();
             }
         });
+
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
@@ -156,6 +154,11 @@ public class LoginActivity extends ActionBarActivity implements LoaderCallbacks<
         if (cancel) {
             focusView.requestFocus();
         } else {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(mAddressView.getWindowToken(), 0);
+            imm.hideSoftInputFromWindow(mUsernameView.getWindowToken(), 0);
+            imm.hideSoftInputFromWindow(mPasswordView.getWindowToken(), 0);
+
             showProgress(true);
             mAuthTask = new UserLoginTask(address, username, password);
             mAuthTask.execute((Void) null);
@@ -267,13 +270,12 @@ public class LoginActivity extends ActionBarActivity implements LoaderCallbacks<
                 JSONObject json = (JSONObject)parser.parse(result);
                 if((Boolean)json.get("status")) {
                     SharedPreferences.Editor editor = MainActivity.settings.edit();
-                    JSONArray credentials = (JSONArray)parser.parse(MainActivity.settings.getString("credentiald", "[]"));
-                    MainActivity.currentCredential = credentials.size();
+                    JSONArray credentials = (JSONArray)parser.parse(MainActivity.settings.getString("credentials", "[]"));
                     JSONObject credential = new JSONObject();
                     credential.put("address", realAddress);
                     credential.put("token", json.get("token"));
                     credentials.add(credential);
-                    editor.putInt("currentCredential", MainActivity.currentCredential);
+                    editor.putInt("currentCredential", credentials.size() - 1);
                     editor.putString("credentials", credentials.toString());
                     editor.commit();
                     return true;
@@ -314,7 +316,9 @@ public class LoginActivity extends ActionBarActivity implements LoaderCallbacks<
             showProgress(false);
 
             if (success) {
-                finishWithResult(true);
+                Intent homeIntent = new Intent(LoginActivity.this, HomeActivity.class);
+                startActivity(homeIntent);
+                finish();
             }
         }
 
@@ -323,18 +327,5 @@ public class LoginActivity extends ActionBarActivity implements LoaderCallbacks<
             mAuthTask = null;
             showProgress(false);
         }
-
-        private void finishWithResult(Boolean success)
-        {
-            Intent data = new Intent();
-            data.putExtra("success", success);
-            if (getParent() == null) {
-                setResult(Activity.RESULT_OK, data);
-            } else {
-                getParent().setResult(Activity.RESULT_OK, data);
-            }
-            finish();
-        }
     }
 }
-
