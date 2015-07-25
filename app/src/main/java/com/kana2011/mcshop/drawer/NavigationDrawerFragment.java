@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.kana2011.mcshop.R;
+import com.kana2011.mcshop.libs.SimpleSectionedRecyclerViewAdapter;
 
 import org.json.simple.JSONObject;
 
@@ -66,8 +67,21 @@ public class NavigationDrawerFragment extends Fragment {
         mMoneyView = (TextView)layout.findViewById(R.id.money_view);
 
         adapter = new DrawerAdapter(getActivity(), getData());
-        recyclerView.setAdapter(adapter);
+        recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        List<SimpleSectionedRecyclerViewAdapter.Section> sections =
+                new ArrayList<>();
+
+        sections.add(new SimpleSectionedRecyclerViewAdapter.Section(3,"Section 1"));
+
+        SimpleSectionedRecyclerViewAdapter.Section[] dummy = new SimpleSectionedRecyclerViewAdapter.Section[sections.size()];
+        SimpleSectionedRecyclerViewAdapter mSectionedAdapter = new
+                SimpleSectionedRecyclerViewAdapter(getActivity(),R.layout.section,R.id.section_text,adapter);
+        mSectionedAdapter.setSections(sections.toArray(dummy));
+
+        recyclerView.setAdapter(mSectionedAdapter);
+
         return layout;
     }
 
@@ -81,8 +95,8 @@ public class NavigationDrawerFragment extends Fragment {
 
     public static List<DrawerItem> getData() {
         List<DrawerItem> data = new ArrayList<>();
-        int[] icons = {R.drawable.ic_shopping_cart, R.drawable.ic_credit_card, R.drawable.ic_view_headline};
-        String[] titles = {"Shop", "Topup", "Transaction"};
+        int[] icons = {R.drawable.ic_shopping_cart, R.drawable.ic_credit_card, R.drawable.ic_view_headline, R.drawable.ic_settings};
+        String[] titles = {"Shop", "Topup", "Transaction", "Settings"};
         for(int i = 0; i < icons.length; i++) {
             DrawerItem current = new DrawerItem();
             current.iconId = icons[i];

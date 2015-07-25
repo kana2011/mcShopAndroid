@@ -1,6 +1,9 @@
 package com.kana2011.mcshop.drawer;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +14,8 @@ import android.widget.Toast;
 
 import com.kana2011.mcshop.HomeActivity;
 import com.kana2011.mcshop.R;
+import com.kana2011.mcshop.SettingsActivity;
+import com.kana2011.mcshop.SettingsFragment;
 
 import java.util.Collections;
 import java.util.List;
@@ -69,8 +74,17 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
         @Override
         public void onClick(View v) {
             HomeActivity.getInstance().getDrawerFragment().getDrawerLayout().closeDrawers();
-            if(getPosition() != 0) {
-                HomeActivity.getInstance().showFragment(getPosition());
+            System.out.println(getPosition());
+            switch(getPosition()) {
+                case 0:
+                    break;
+                case 4:
+                    Intent settingsIntent = new Intent(HomeActivity.getInstance(), SettingsActivity.class);
+                    HomeActivity.getInstance().startActivity(settingsIntent);
+                    break;
+                default:
+                    //HomeActivity.getInstance().showFragment(getPosition());
+                    break;
             }
         }
     }
