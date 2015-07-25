@@ -39,7 +39,7 @@ public class HomeActivity extends ActionBarActivity {
     private NavigationDrawerFragment drawerFragment;
     private Toolbar toolbar;
     private static HomeActivity instance;
-    private JSONObject userinfo;
+    private JSONObject userInfo;
 
     private List<Fragment> fragments = new ArrayList<>();
 
@@ -74,14 +74,17 @@ public class HomeActivity extends ActionBarActivity {
 
             List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>(2);
             nameValuePairList.add(new BasicNameValuePair("token", token));
-            userinfo = (JSONObject)parser.parse(Util.postData(address + "/api/user:shop", nameValuePairList));
+            userInfo = (JSONObject)parser.parse(Util.postData(address + "/api/user:shop", nameValuePairList));
+
+            drawerFragment.setUsername((String)userInfo.get("username"));
+            drawerFragment.setMoney("" + userInfo.get("money"));
 
             SharedPreferences.Editor editor = settings.edit();
-            credential.put("username", userinfo.get("username"));
+            credential.put("username", userInfo.get("username"));
             editor.putString("credentials", credentials.toString());
             editor.commit();
 
-            JSONArray groups = (JSONArray)userinfo.get("shop");
+            JSONArray groups = (JSONArray)userInfo.get("shop");
             ShopFragment fragment = new ShopFragment();
             fragment.setGroupsInfo(groups);
             fragments.add(fragment);

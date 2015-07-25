@@ -13,8 +13,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.kana2011.mcshop.R;
+
+import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,9 +30,14 @@ public class NavigationDrawerFragment extends Fragment {
     private RecyclerView recyclerView;
     public static final String PREFS_NAME = "com.kana2011.mcShop";
     public static final String KEY_USER_LEARNED_DRAWER = "user_learned_drawer";
+
+    private JSONObject userInfo;
+
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
     private DrawerAdapter adapter;
+    private TextView mUsernameView;
+    private TextView mMoneyView;
 
     private boolean mUserLearnedDrawer;
     private boolean mFromSavedInstanceState;
@@ -38,7 +46,6 @@ public class NavigationDrawerFragment extends Fragment {
     public NavigationDrawerFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,10 +61,22 @@ public class NavigationDrawerFragment extends Fragment {
                              Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
         recyclerView = (RecyclerView)layout.findViewById(R.id.drawer_list);
+
+        mUsernameView = (TextView)layout.findViewById(R.id.username_view);
+        mMoneyView = (TextView)layout.findViewById(R.id.money_view);
+
         adapter = new DrawerAdapter(getActivity(), getData());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         return layout;
+    }
+
+    public void setUsername(String username) {
+        mUsernameView.setText(username);
+    }
+
+    public void setMoney(String money) {
+        mMoneyView.setText("Money: " + money);
     }
 
     public static List<DrawerItem> getData() {
@@ -103,6 +122,7 @@ public class NavigationDrawerFragment extends Fragment {
                 mDrawerToggle.syncState();
             }
         });
+
     }
 
     public static void saveToPreferences(Context context, String preferenceName, String preferenceValue) {
