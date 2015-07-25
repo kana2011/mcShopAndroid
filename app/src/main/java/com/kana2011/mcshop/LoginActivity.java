@@ -313,12 +313,13 @@ public class LoginActivity extends ActionBarActivity implements LoaderCallbacks<
         @Override
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
-            showProgress(false);
 
             if (success) {
                 Intent homeIntent = new Intent(LoginActivity.this, HomeActivity.class);
                 startActivity(homeIntent);
                 finish();
+            } else {
+                showProgress(false);
             }
         }
 
