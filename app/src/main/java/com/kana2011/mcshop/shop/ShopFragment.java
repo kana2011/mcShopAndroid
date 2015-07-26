@@ -1,4 +1,4 @@
-package com.kana2011.mcshop;
+package com.kana2011.mcshop.shop;
 
 
 import android.os.Bundle;
@@ -10,8 +10,8 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
+import com.kana2011.mcshop.R;
 import com.kana2011.mcshop.tabs.SlidingTabLayout;
 
 import org.json.simple.JSONArray;

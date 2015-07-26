@@ -26,9 +26,9 @@ repositories {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:22.2.1'
+    compile 'com.android.support:cardview-v7:22.2.1+'
     compile 'com.android.support:recyclerview-v7:22.2.1'
     compile 'com.google.android.gms:play-services:7.5.0'
-    compile project(':materialList')
     compile files('libs/json-simple-1.1.1.jar')
 
 }

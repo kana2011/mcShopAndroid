@@ -1,6 +1,5 @@
 package com.kana2011.mcshop;
 
-import android.content.Intent;
 import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -10,16 +9,13 @@ import android.content.SharedPreferences;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Toast;
 
 import com.kana2011.mcshop.drawer.NavigationDrawerFragment;
+import com.kana2011.mcshop.shop.ShopFragment;
 import com.kana2011.mcshop.utils.Util;
 
 import org.apache.http.NameValuePair;
@@ -29,7 +25,6 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 
