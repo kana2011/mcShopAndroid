@@ -7,7 +7,7 @@
         android:id="@+id/tint"
         android:layout_width="match_parent"
         android:layout_height="@dimen/app_bar_top_padding"
-        android:background="@color/md_light_green_700"/>
+        android:background="@color/md_light_blue_700"/>
 
     <include
         android:id="@+id/app_bar"
