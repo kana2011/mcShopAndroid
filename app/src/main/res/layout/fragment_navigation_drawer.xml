@@ -2,12 +2,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/md_grey_100"
     tools:context="com.kana2011.mcshop.drawer.NavigationDrawerFragment">
 
     <RelativeLayout
-        android:layout_width="match_parent"
+        android:layout_width="280dp"
         android:layout_height="192dp"
+        android:background="@color/md_grey_100"
         android:id="@+id/linearLayout">
         <ImageView
             android:id="@+id/cover"
@@ -49,12 +49,21 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/drawer_list"
-        android:layout_width="match_parent"
+        android:layout_width="280dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/linearLayout"
+        android:background="@color/md_grey_100"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
 
     </android.support.v7.widget.RecyclerView>
+
+    <View
+        android:layout_width="@dimen/elevation_navigation_drawer"
+        android:layout_height="match_parent"
+        android:layout_toRightOf="@id/linearLayout"
+        android:layout_toEndOf="@id/linearLayout"
+        android:background="@drawable/horizontalshadow"
+        android:layout_marginBottom="-8dp"/>
 
 </RelativeLayout>
