@@ -25,4 +25,11 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/elevation_app_bar"
+        android:layout_below="@id/app_bar"
+        android:background="@drawable/dropshadow"
+        android:layout_marginBottom="-8dp"/>
+
 </RelativeLayout>
