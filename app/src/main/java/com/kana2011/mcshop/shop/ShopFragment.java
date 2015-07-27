@@ -53,7 +53,7 @@ public class ShopFragment extends Fragment {
         mTabs.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
             @Override
             public int getIndicatorColor(int position) {
-                return getResources().getColor(R.color.md_yellow_500);
+                return getResources().getColor(R.color.md_amber_500);
             }
         });
 
