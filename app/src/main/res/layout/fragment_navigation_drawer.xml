@@ -63,7 +63,6 @@
         android:layout_height="match_parent"
         android:layout_toRightOf="@id/linearLayout"
         android:layout_toEndOf="@id/linearLayout"
-        android:background="@drawable/horizontalshadow"
-        android:layout_marginBottom="-8dp"/>
+        android:background="@drawable/horizontalshadow"/>
 
 </RelativeLayout>

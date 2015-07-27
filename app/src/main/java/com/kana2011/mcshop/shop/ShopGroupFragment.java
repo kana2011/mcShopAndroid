@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.kana2011.mcshop.R;
+import com.kana2011.mcshop.libs.DividerItemDecoration;
 import com.kana2011.mcshop.shop.ShopViewAdapter;
 
 import org.json.simple.JSONArray;
@@ -51,6 +52,7 @@ public class ShopGroupFragment extends Fragment {
 
         mRecyclerView = (RecyclerView)rootView.findViewById(R.id.cards_list);
         mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
 
         GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 1);
         mRecyclerView.setLayoutManager(layoutManager);
