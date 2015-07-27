@@ -36,6 +36,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.kana2011.mcshop.HomeActivity" />
         </activity>
+        <activity
+            android:name=".shop.ShopDetailActivity"
+            android:label="@string/title_activity_shop_detail" >
+        </activity>
     </application>
 
 </manifest>

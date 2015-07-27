@@ -26,5 +26,6 @@
     <string name="settings_signout">Sign out</string>
     <string name="settings_signout_summary">Remove selected acount from this device</string>
     <string name="settings_signout_content">You won\'t be able to access this account unless you sign in again.</string>
+    <string name="title_activity_shop_detail">ShopDetailActivity</string>
 
 </resources>
