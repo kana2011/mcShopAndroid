@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -14,16 +15,20 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.kana2011.mcshop.R;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.w3c.dom.Text;
 
 public class ShopDetailActivity extends ActionBarActivity {
     private Toolbar toolbar;
-    private ImageView mImageView;
-
-    public static final String EXTRA_IMAGE = "ShopDetailActivity:item_photo";
+    private ImageView mItemPhoto;
+    private TextView mItemName;
+    private JSONObject itemInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +41,14 @@ public class ShopDetailActivity extends ActionBarActivity {
                             | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         }
 
+        itemInfo = null;
+        JSONParser parser = new JSONParser();
+        try {
+            itemInfo = (JSONObject)parser.parse(getIntent().getStringExtra("itemInfo"));
+        } catch(Exception e) {
+
+        }
+
         toolbar = (Toolbar)findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -45,11 +58,14 @@ public class ShopDetailActivity extends ActionBarActivity {
         //float dpHeight = displayMetrics.heightPixels / displayMetrics.density;
         float dpWidth = displayMetrics.widthPixels;
 
-        mImageView = (ImageView)findViewById(R.id.item_photo);
-        mImageView.getLayoutParams().width = (int)dpWidth;
-        mImageView.getLayoutParams().height = (int)dpWidth;
+        mItemPhoto = (ImageView)findViewById(R.id.item_photo);
+        mItemPhoto.getLayoutParams().width = (int)dpWidth;
+        mItemPhoto.getLayoutParams().height = (int)dpWidth;
 
-        ViewCompat.setTransitionName(mImageView, EXTRA_IMAGE);
+        mItemName = (TextView)findViewById(R.id.item_name);
+        mItemName.setText((String)itemInfo.get("dispname"));
+
+        ViewCompat.setTransitionName(mItemPhoto, "item_photo");
     }
 
     @Override
@@ -74,10 +90,11 @@ public class ShopDetailActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public static void launch(Activity activity, View transitionView, JSONObject itemInfo) {
-        ActivityOptionsCompat options =
-                ActivityOptionsCompat.makeSceneTransitionAnimation(
-                        activity, transitionView, EXTRA_IMAGE);
+    public static void launch(Activity activity, View photoView, JSONObject itemInfo) {
+        //ActivityOptionsCompat options =
+        //        ActivityOptionsCompat.makeSceneTransitionAnimation(
+        //                activity, transitionView, EXTRA_IMAGE);
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, Pair.create(photoView, "item_photo"));
         Intent intent = new Intent(activity, ShopDetailActivity.class);
         intent.putExtra("itemInfo", itemInfo.toString());
         ActivityCompat.startActivity(activity, intent, options.toBundle());
