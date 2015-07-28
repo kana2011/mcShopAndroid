@@ -1,8 +1,11 @@
 package com.kana2011.mcshop.shop;
 
+import android.animation.Animator;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
@@ -10,14 +13,23 @@ import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.transition.Transition;
 import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewAnimationUtils;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.kana2011.mcshop.HomeActivity;
 import com.kana2011.mcshop.R;
+import com.kana2011.mcshop.anim.ReverseInterpolator;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -29,16 +41,46 @@ public class ShopDetailActivity extends ActionBarActivity {
     private ImageView mItemPhoto;
     private TextView mItemName;
     private JSONObject itemInfo;
+    private Handler mHandler;
+    private Transition.TransitionListener mTransitionListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shop_detail);
 
+        mHandler = new Handler(Looper.getMainLooper());
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().getDecorView().setSystemUiVisibility(
                     View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                             | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+
+            Transition enterTransition = getWindow().getSharedElementEnterTransition();
+            mTransitionListener = new Transition.TransitionListener() {
+                @Override
+                public void onTransitionStart(Transition transition) {
+                }
+
+                @Override
+                public void onTransitionEnd(Transition transition) {
+                    animateRevealShow(findViewById(R.id.item_info), findViewById(R.id.item_photo));
+                    animateDecelerateShow(findViewById(R.id.fab));
+                }
+
+                @Override
+                public void onTransitionCancel(Transition transition) {
+                }
+
+                @Override
+                public void onTransitionPause(Transition transition) {
+                }
+
+                @Override
+                public void onTransitionResume(Transition transition) {
+                }
+            };
+            enterTransition.addListener(mTransitionListener);
         }
 
         itemInfo = null;
@@ -63,7 +105,7 @@ public class ShopDetailActivity extends ActionBarActivity {
         mItemPhoto.getLayoutParams().height = (int)dpWidth;
 
         mItemName = (TextView)findViewById(R.id.item_name);
-        mItemName.setText((String)itemInfo.get("dispname"));
+        mItemName.setText((String) itemInfo.get("dispname"));
 
         ViewCompat.setTransitionName(mItemPhoto, "item_photo");
     }
@@ -91,12 +133,68 @@ public class ShopDetailActivity extends ActionBarActivity {
     }
 
     public static void launch(Activity activity, View photoView, JSONObject itemInfo) {
-        //ActivityOptionsCompat options =
-        //        ActivityOptionsCompat.makeSceneTransitionAnimation(
-        //                activity, transitionView, EXTRA_IMAGE);
         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, Pair.create(photoView, "item_photo"));
         Intent intent = new Intent(activity, ShopDetailActivity.class);
         intent.putExtra("itemInfo", itemInfo.toString());
+        intent.putExtra("showExitAnimation", true);
         ActivityCompat.startActivity(activity, intent, options.toBundle());
+    }
+
+    private void animateRevealShow(View showView, View sourceView) {
+        int cx = (showView.getLeft() + showView.getRight()) / 2;
+        int cy = 0 - (sourceView.getHeight() / 4);
+
+        int finalRadius = Math.max(showView.getWidth(), showView.getHeight());
+
+        Animator anim =
+                ViewAnimationUtils.createCircularReveal(showView, cx, cy, 0, finalRadius);
+
+        showView.setVisibility(View.VISIBLE);
+        anim.start();
+    }
+
+    private void animateRevealHide(View showView, View sourceView) {
+        int cx = (showView.getLeft() + showView.getRight()) / 2;
+        int cy = 0 - (sourceView.getHeight() / 4);
+
+        int finalRadius = Math.max(showView.getWidth(), showView.getHeight());
+
+        Animator anim =
+                ViewAnimationUtils.createCircularReveal(showView, cx, cy, 0, finalRadius);
+        anim.setInterpolator(new ReverseInterpolator());
+
+        anim.start();
+    }
+
+    private void animateDecelerateShow(View showView) {
+        Animation anim = AnimationUtils.loadAnimation(this, R.anim.zoomin);
+        anim.setInterpolator(new DecelerateInterpolator());
+        anim.setDuration(200);
+        showView.setVisibility(View.VISIBLE);
+        showView.startAnimation(anim);
+    }
+
+    private void animateAccelerateHide(View showView) {
+        Animation anim = AnimationUtils.loadAnimation(this, R.anim.zoomout);
+        anim.setInterpolator(new AccelerateInterpolator());
+        anim.setDuration(200);
+        showView.setVisibility(View.INVISIBLE);
+        showView.startAnimation(anim);
+    }
+
+    @Override
+    public void onBackPressed() {
+        getWindow().getSharedElementEnterTransition().removeListener(mTransitionListener);
+        animateRevealHide(findViewById(R.id.item_info), findViewById(R.id.item_photo));
+        animateAccelerateHide(findViewById(R.id.fab));
+        final ShopDetailActivity activity = this;
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                findViewById(R.id.item_info).setVisibility(View.INVISIBLE);
+                activity.supportFinishAfterTransition();
+                mHandler.postDelayed(this, 300);
+            }
+        }, 300);
     }
 }

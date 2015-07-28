@@ -30,17 +30,6 @@
         app:theme="@style/McShopToolbarTheme"
         app:popupTheme="@style/McShopToolbarPopupTheme"/>
 
-    <TextView
-        android:id="@+id/item_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:textSize="24sp"
-        android:textColor="@color/md_black_1000"
-        android:layout_below="@+id/item_photo"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
@@ -49,11 +38,33 @@
         android:layout_marginTop="-32dp"
         android:layout_marginRight="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_below="@+id/item_photo"
+        android:layout_below="@id/item_photo"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         app:elevation="6dp"
         app:pressedTranslationZ="12dp"
-        app:borderWidth="0dp"/>
+        app:borderWidth="0dp"
+        android:visibility="invisible"/>
+
+    <RelativeLayout
+        android:id="@+id/item_info"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/item_photo"
+        android:background="@color/md_black_1000"
+        android:visibility="invisible">
+
+        <TextView
+            android:id="@+id/item_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:textSize="24sp"
+            android:textColor="@color/md_black_1000"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+    </RelativeLayout>
 
 </RelativeLayout>

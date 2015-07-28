@@ -1,0 +1,10 @@
+<transitionSet xmlns:android="http://schemas.android.com/apk/res/android">
+    <changeBounds
+        android:interpolator="@android:interpolator/overshoot"/>
+    <changeTransform
+        android:interpolator="@android:interpolator/overshoot"/>
+    <changeClipBounds
+        android:interpolator="@android:interpolator/overshoot"/>
+    <changeImageTransform
+        android:interpolator="@android:interpolator/overshoot"/>
+</transitionSet>
