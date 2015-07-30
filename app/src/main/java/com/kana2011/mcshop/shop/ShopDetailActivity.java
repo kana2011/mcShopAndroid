@@ -4,7 +4,9 @@ import android.animation.Animator;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.Build;
 import android.os.Handler;
@@ -141,6 +143,7 @@ public class ShopDetailActivity extends ActionBarActivity implements OnScrollCha
 
         ViewCompat.setTransitionName(mItemPhoto, "item_photo");
 
+        fabIsShown = true;
         toolbarIsTranslucent = true;
         statusBarIsTranslucent = true;
 
@@ -261,11 +264,17 @@ public class ShopDetailActivity extends ActionBarActivity implements OnScrollCha
     private void updateFab(int calculatedScroll) {
         if(calculatedScroll >= 0) {
             if(fabIsShown) {
+                MenuItem buy = mMenu.add(0, 99, 0, "Buy");
+                Drawable icon = getResources().getDrawable(R.drawable.ic_shopping_cart);
+                icon.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+                buy.setIcon(icon);
+                buy.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
                 animateAccelerateHide(findViewById(R.id.fab));
                 fabIsShown = false;
             }
         } else {
             if(!fabIsShown) {
+                mMenu.removeItem(99);
                 animateDecelerateShow(findViewById(R.id.fab));
                 fabIsShown = true;
             }
