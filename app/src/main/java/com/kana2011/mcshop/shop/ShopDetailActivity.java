@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.app.NavUtils;
 import android.support.v4.util.Pair;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBarActivity;
@@ -81,6 +82,9 @@ public class ShopDetailActivity extends ActionBarActivity {
                 }
             };
             enterTransition.addListener(mTransitionListener);
+        } else {
+            findViewById(R.id.item_info).setVisibility(View.VISIBLE);
+            findViewById(R.id.fab).setVisibility(View.VISIBLE);
         }
 
         itemInfo = null;
@@ -94,6 +98,7 @@ public class ShopDetailActivity extends ActionBarActivity {
         toolbar = (Toolbar)findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
 
@@ -122,11 +127,12 @@ public class ShopDetailActivity extends ActionBarActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                back();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -184,17 +190,25 @@ public class ShopDetailActivity extends ActionBarActivity {
 
     @Override
     public void onBackPressed() {
-        getWindow().getSharedElementEnterTransition().removeListener(mTransitionListener);
-        animateRevealHide(findViewById(R.id.item_info), findViewById(R.id.item_photo));
-        animateAccelerateHide(findViewById(R.id.fab));
-        final ShopDetailActivity activity = this;
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                findViewById(R.id.item_info).setVisibility(View.INVISIBLE);
-                activity.supportFinishAfterTransition();
-                mHandler.postDelayed(this, 300);
-            }
-        }, 300);
+        back();
+    }
+
+    private void back() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().getSharedElementEnterTransition().removeListener(mTransitionListener);
+            animateRevealHide(findViewById(R.id.item_info), findViewById(R.id.item_photo));
+            animateAccelerateHide(findViewById(R.id.fab));
+            final ShopDetailActivity activity = this;
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    findViewById(R.id.item_info).setVisibility(View.INVISIBLE);
+                    activity.supportFinishAfterTransition();
+                    mHandler.postDelayed(this, 300);
+                }
+            }, 300);
+        } else {
+            finish();
+        }
     }
 }

@@ -6,6 +6,8 @@ local.properties
 bin/
 gen/
 build/
-.idea/
+.idea/*
 *.iml
 .gradle
+.idea/misc.xml
+.idea/vcs.xml

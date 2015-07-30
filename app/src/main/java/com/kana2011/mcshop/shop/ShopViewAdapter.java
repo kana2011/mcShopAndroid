@@ -62,7 +62,6 @@ public class ShopViewAdapter extends RecyclerView.Adapter<ShopViewAdapter.ShopIt
 
         @Override
         public void onClick(View v) {
-            System.out.println(getPosition());
             ShopDetailActivity.launch(HomeActivity.getInstance(), v.findViewById(R.id.item_photo), itemInfo);
         }
     }
