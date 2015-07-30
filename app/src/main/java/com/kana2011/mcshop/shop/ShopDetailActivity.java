@@ -3,6 +3,9 @@ package com.kana2011.mcshop.shop;
 import android.animation.Animator;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.TransitionDrawable;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
@@ -20,29 +23,44 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewAnimationUtils;
+import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.kana2011.mcshop.HomeActivity;
 import com.kana2011.mcshop.R;
 import com.kana2011.mcshop.anim.ReverseInterpolator;
+import com.kana2011.mcshop.libs.ObservableScrollView;
+import com.kana2011.mcshop.libs.OnScrollChangedCallback;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.w3c.dom.Text;
 
-public class ShopDetailActivity extends ActionBarActivity {
-    private Toolbar toolbar;
+public class ShopDetailActivity extends ActionBarActivity implements OnScrollChangedCallback {
+    private Toolbar mToolbar;
     private ImageView mItemPhoto;
     private TextView mItemName;
     private JSONObject itemInfo;
+    private View mStatusBarTint;
     private Handler mHandler;
+    private int mLastDampedScroll;
+    private Menu mMenu;
+    private String itemName;
+    private ColorDrawable colorPrimaryDrawable;
+    private ColorDrawable colorPrimaryDarkDrawable;
+    private ColorDrawable statusBarTintDrawable;
+    private ObservableScrollView mScrollView;
+    private boolean fabIsShown;
+    private boolean toolbarIsTranslucent;
+    private boolean statusBarIsTranslucent;
     private Transition.TransitionListener mTransitionListener;
 
     @Override
@@ -95,30 +113,45 @@ public class ShopDetailActivity extends ActionBarActivity {
 
         }
 
-        toolbar = (Toolbar)findViewById(R.id.app_bar);
-        setSupportActionBar(toolbar);
+        colorPrimaryDrawable = new ColorDrawable(getResources().getColor(R.color.md_light_blue_500));
+        colorPrimaryDarkDrawable = new ColorDrawable(getResources().getColor(R.color.md_light_blue_700));
+        statusBarTintDrawable = new ColorDrawable(Color.parseColor("#50000000"));
+        itemName = (String)itemInfo.get("dispname");
+
+        mToolbar = (Toolbar)findViewById(R.id.app_bar);
+        setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        mStatusBarTint = (View)findViewById(R.id.tint);
+
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
 
-        //float dpHeight = displayMetrics.heightPixels / displayMetrics.density;
-        float dpWidth = displayMetrics.widthPixels;
+        final float dpWidth = displayMetrics.widthPixels;
 
         mItemPhoto = (ImageView)findViewById(R.id.item_photo);
         mItemPhoto.getLayoutParams().width = (int)dpWidth;
         mItemPhoto.getLayoutParams().height = (int)dpWidth;
 
         mItemName = (TextView)findViewById(R.id.item_name);
-        mItemName.setText((String) itemInfo.get("dispname"));
+        mItemName.setText(itemName);
+
+        mScrollView = (ObservableScrollView)findViewById(R.id.scroll_view);
+        mScrollView.setOnScrollChangedCallback(this);
 
         ViewCompat.setTransitionName(mItemPhoto, "item_photo");
+
+        toolbarIsTranslucent = true;
+        statusBarIsTranslucent = true;
+
+        onScroll(-1, 0);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_shop_detail, menu);
+        mMenu = menu;
         return true;
     }
 
@@ -211,4 +244,83 @@ public class ShopDetailActivity extends ActionBarActivity {
             finish();
         }
     }
+
+    @Override
+    public void onScroll(int l, int t) {
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        float dpWidth = displayMetrics.widthPixels;
+        int appBarSize = mToolbar.getHeight();
+        int statusBarSize = getResources().getDimensionPixelSize(R.dimen.app_bar_top_padding);
+        int calculatedScroll = (int)(t + statusBarSize + appBarSize - dpWidth);
+        updateFab(calculatedScroll);
+        updateToolbar(calculatedScroll);
+        updateStatusBarTint(calculatedScroll);
+        updateParallaxEffect(t);
+    }
+
+    private void updateFab(int calculatedScroll) {
+        if(calculatedScroll >= 0) {
+            if(fabIsShown) {
+                animateAccelerateHide(findViewById(R.id.fab));
+                fabIsShown = false;
+            }
+        } else {
+            if(!fabIsShown) {
+                animateDecelerateShow(findViewById(R.id.fab));
+                fabIsShown = true;
+            }
+        }
+    }
+
+    private void updateToolbar(int calculatedScroll) {
+        if (Build.VERSION.SDK_INT >= 16) {
+            if (calculatedScroll >= 0) {
+                if (toolbarIsTranslucent) {
+                    mToolbar.setBackgroundResource(R.drawable.fading_toolbar_background);
+                    TransitionDrawable transition = (TransitionDrawable) mToolbar.getBackground();
+                    transition.startTransition(200);
+                    toolbarIsTranslucent = false;
+                }
+                mToolbar.setTitle(itemName);
+            } else {
+                if (!toolbarIsTranslucent) {
+                    mToolbar.setBackgroundResource(R.drawable.fading_toolbar_background);
+                    TransitionDrawable transition = (TransitionDrawable) mToolbar.getBackground();
+                    transition.reverseTransition(200);
+                    toolbarIsTranslucent = true;
+                }
+                mToolbar.setTitle("");
+            }
+        }
+    }
+
+    private void updateStatusBarTint(int calculatedScroll) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            if(calculatedScroll >= 0) {
+                if(statusBarIsTranslucent) {
+                    mStatusBarTint.setBackgroundResource(R.drawable.fading_status_bar_background);
+                    TransitionDrawable transition = (TransitionDrawable) mStatusBarTint.getBackground();
+                    transition.startTransition(200);
+                    statusBarIsTranslucent = false;
+                }
+            } else {
+                if(!statusBarIsTranslucent) {
+                    mStatusBarTint.setBackgroundResource(R.drawable.fading_status_bar_background);
+                    TransitionDrawable transition = (TransitionDrawable) mStatusBarTint.getBackground();
+                    transition.reverseTransition(200);
+                    statusBarIsTranslucent = true;
+                }
+            }
+        }
+    }
+
+    private void updateParallaxEffect(int scrollPosition) {
+        float damping = 0.5f;
+        int dampedScroll = (int) (scrollPosition * damping);
+        int offset = mLastDampedScroll - dampedScroll;
+        mItemPhoto.offsetTopAndBottom(-offset);
+
+        mLastDampedScroll = dampedScroll;
+    }
+
 }

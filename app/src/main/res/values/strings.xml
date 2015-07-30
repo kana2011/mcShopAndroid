@@ -28,4 +28,6 @@
     <string name="settings_signout_content">You won\'t be able to access this account unless you sign in again.</string>
     <string name="title_activity_shop_detail">ShopDetailActivity</string>
 
+    <string name="blank"></string>
+
 </resources>

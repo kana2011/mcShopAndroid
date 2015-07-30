@@ -38,7 +38,8 @@
         </activity>
         <activity
             android:name=".shop.ShopDetailActivity"
-            android:label="@string/title_activity_shop_detail" >
+            android:label="@string/blank"
+            android:screenOrientation="portrait">
         </activity>
     </application>
 
