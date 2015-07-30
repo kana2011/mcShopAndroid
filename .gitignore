@@ -2,10 +2,10 @@
 local.properties
 .metadata/
 *.project
-*.settings/
+.settings/
 bin/
 gen/
 build/
-*.idea
+.idea/
 *.iml
 .gradle
