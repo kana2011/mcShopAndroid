@@ -30,4 +30,6 @@
 
     <string name="blank"></string>
 
+    <string name="get">Get</string>
+
 </resources>

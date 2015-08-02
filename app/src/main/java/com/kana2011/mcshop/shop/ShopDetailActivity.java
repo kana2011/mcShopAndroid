@@ -4,16 +4,13 @@ import android.animation.Animator;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.app.NavUtils;
 import android.support.v4.util.Pair;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBarActivity;
@@ -25,42 +22,35 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewAnimationUtils;
-import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
-import android.view.animation.OvershootInterpolator;
+import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.kana2011.mcshop.HomeActivity;
 import com.kana2011.mcshop.R;
 import com.kana2011.mcshop.anim.ReverseInterpolator;
+import com.kana2011.mcshop.libs.McShop;
 import com.kana2011.mcshop.libs.ObservableScrollView;
 import com.kana2011.mcshop.libs.OnScrollChangedCallback;
 
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.w3c.dom.Text;
 
 public class ShopDetailActivity extends ActionBarActivity implements OnScrollChangedCallback {
+    private View mContentView;
     private Toolbar mToolbar;
     private ImageView mItemPhoto;
     private TextView mItemName;
     private JSONObject itemInfo;
+    private Button mBuyButton;
     private View mStatusBarTint;
     private Handler mHandler;
     private int mLastDampedScroll;
-    private Menu mMenu;
     private String itemName;
-    private ColorDrawable colorPrimaryDrawable;
-    private ColorDrawable colorPrimaryDarkDrawable;
-    private ColorDrawable statusBarTintDrawable;
     private ObservableScrollView mScrollView;
-    private boolean fabIsShown;
     private boolean toolbarIsTranslucent;
     private boolean statusBarIsTranslucent;
     private Transition.TransitionListener mTransitionListener;
@@ -69,6 +59,7 @@ public class ShopDetailActivity extends ActionBarActivity implements OnScrollCha
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shop_detail);
+        mContentView = findViewById(android.R.id.content);
 
         mHandler = new Handler(Looper.getMainLooper());
 
@@ -86,7 +77,6 @@ public class ShopDetailActivity extends ActionBarActivity implements OnScrollCha
                 @Override
                 public void onTransitionEnd(Transition transition) {
                     animateRevealShow(findViewById(R.id.item_info), findViewById(R.id.item_photo));
-                    animateDecelerateShow(findViewById(R.id.fab));
                 }
 
                 @Override
@@ -104,7 +94,6 @@ public class ShopDetailActivity extends ActionBarActivity implements OnScrollCha
             enterTransition.addListener(mTransitionListener);
         } else {
             findViewById(R.id.item_info).setVisibility(View.VISIBLE);
-            findViewById(R.id.fab).setVisibility(View.VISIBLE);
         }
 
         itemInfo = null;
@@ -115,9 +104,6 @@ public class ShopDetailActivity extends ActionBarActivity implements OnScrollCha
 
         }
 
-        colorPrimaryDrawable = new ColorDrawable(getResources().getColor(R.color.md_light_blue_500));
-        colorPrimaryDarkDrawable = new ColorDrawable(getResources().getColor(R.color.md_light_blue_700));
-        statusBarTintDrawable = new ColorDrawable(Color.parseColor("#50000000"));
         itemName = (String)itemInfo.get("dispname");
 
         mToolbar = (Toolbar)findViewById(R.id.app_bar);
@@ -133,7 +119,7 @@ public class ShopDetailActivity extends ActionBarActivity implements OnScrollCha
 
         mItemPhoto = (ImageView)findViewById(R.id.item_photo);
         mItemPhoto.getLayoutParams().width = (int)dpWidth;
-        mItemPhoto.getLayoutParams().height = (int)dpWidth;
+        mItemPhoto.getLayoutParams().height = (int)dpWidth * 4 / 7;
 
         mItemName = (TextView)findViewById(R.id.item_name);
         mItemName.setText(itemName);
@@ -141,9 +127,20 @@ public class ShopDetailActivity extends ActionBarActivity implements OnScrollCha
         mScrollView = (ObservableScrollView)findViewById(R.id.scroll_view);
         mScrollView.setOnScrollChangedCallback(this);
 
+        final ShopDetailActivity context = this;
+        mBuyButton = (Button)findViewById(R.id.buy_button);
+        if((int)(long)itemInfo.get("price") != 0) {
+            mBuyButton.setText(McShop.getCurrencyUnit() + Integer.toString((int) (long) itemInfo.get("price")));
+        }
+        mBuyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                McShop.Shop.buy(context, (int) (long) itemInfo.get("id"), (String) itemInfo.get("dispname"));
+            }
+        });
+
         ViewCompat.setTransitionName(mItemPhoto, "item_photo");
 
-        fabIsShown = true;
         toolbarIsTranslucent = true;
         statusBarIsTranslucent = true;
 
@@ -154,7 +151,6 @@ public class ShopDetailActivity extends ActionBarActivity implements OnScrollCha
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_shop_detail, menu);
-        mMenu = menu;
         return true;
     }
 
@@ -233,7 +229,6 @@ public class ShopDetailActivity extends ActionBarActivity implements OnScrollCha
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().getSharedElementEnterTransition().removeListener(mTransitionListener);
             animateRevealHide(findViewById(R.id.item_info), findViewById(R.id.item_photo));
-            animateAccelerateHide(findViewById(R.id.fab));
             final ShopDetailActivity activity = this;
             mHandler.postDelayed(new Runnable() {
                 @Override
@@ -254,31 +249,10 @@ public class ShopDetailActivity extends ActionBarActivity implements OnScrollCha
         float dpWidth = displayMetrics.widthPixels;
         int appBarSize = mToolbar.getHeight();
         int statusBarSize = getResources().getDimensionPixelSize(R.dimen.app_bar_top_padding);
-        int calculatedScroll = (int)(t + statusBarSize + appBarSize - dpWidth);
-        updateFab(calculatedScroll);
+        int calculatedScroll = (int)(t + statusBarSize + appBarSize - mItemPhoto.getLayoutParams().height);
         updateToolbar(calculatedScroll);
         updateStatusBarTint(calculatedScroll);
         updateParallaxEffect(t);
-    }
-
-    private void updateFab(int calculatedScroll) {
-        if(calculatedScroll >= 0) {
-            if(fabIsShown) {
-                MenuItem buy = mMenu.add(0, 99, 0, "Buy");
-                Drawable icon = getResources().getDrawable(R.drawable.ic_shopping_cart);
-                icon.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
-                buy.setIcon(icon);
-                buy.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-                animateAccelerateHide(findViewById(R.id.fab));
-                fabIsShown = false;
-            }
-        } else {
-            if(!fabIsShown) {
-                mMenu.removeItem(99);
-                animateDecelerateShow(findViewById(R.id.fab));
-                fabIsShown = true;
-            }
-        }
     }
 
     private void updateToolbar(int calculatedScroll) {
@@ -330,6 +304,10 @@ public class ShopDetailActivity extends ActionBarActivity implements OnScrollCha
         mItemPhoto.offsetTopAndBottom(-offset);
 
         mLastDampedScroll = dampedScroll;
+    }
+
+    public View getContentView() {
+        return mContentView;
     }
 
 }

@@ -10,11 +10,13 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.kana2011.mcshop.drawer.NavigationDrawerFragment;
+import com.kana2011.mcshop.libs.McShop;
 import com.kana2011.mcshop.shop.ShopFragment;
 import com.kana2011.mcshop.utils.Util;
 
@@ -59,40 +61,24 @@ public class HomeActivity extends ActionBarActivity {
         drawerFragment = (NavigationDrawerFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
         drawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), toolbar);
 
-        settings = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        JSONParser parser = new JSONParser();
-        try {
-            JSONArray credentials = (JSONArray) parser.parse(settings.getString("credentials", "[]"));
-            JSONObject credential = (JSONObject) credentials.get(settings.getInt("currentCredential", 0));
-            String address = (String) credential.get("address");
-            String token = (String) credential.get("token");
+        List<NameValuePair> nameValuePairList = new ArrayList<>();
+        userInfo = McShop.getJsonObject(McShop.postData(McShop.getCurrentCredential(this), "/api/user:shop", nameValuePairList));
 
-            List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>(2);
-            nameValuePairList.add(new BasicNameValuePair("token", token));
-            userInfo = (JSONObject)parser.parse(Util.postData(address + "/api/user:shop", nameValuePairList));
+        drawerFragment.setUsername((String)userInfo.get("username"));
+        drawerFragment.setMoney("" + userInfo.get("money"));
 
-            drawerFragment.setUsername((String)userInfo.get("username"));
-            drawerFragment.setMoney("" + userInfo.get("money"));
+        McShop.saveUsername(this, (String)userInfo.get("username"));
 
-            SharedPreferences.Editor editor = settings.edit();
-            credential.put("username", userInfo.get("username"));
-            editor.putString("credentials", credentials.toString());
-            editor.commit();
+        JSONArray groups = (JSONArray)userInfo.get("shop");
+        ShopFragment fragment = new ShopFragment();
+        fragment.setGroupsInfo(groups);
+        fragments.add(fragment);
 
-            JSONArray groups = (JSONArray)userInfo.get("shop");
-            ShopFragment fragment = new ShopFragment();
-            fragment.setGroupsInfo(groups);
-            fragments.add(fragment);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-            fragmentTransaction.add(R.id.main_fragment, fragment);
-            fragmentTransaction.commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-            finish();
-        }
+        fragmentTransaction.add(R.id.main_fragment, fragment);
+        fragmentTransaction.commit();
     }
 
     @Override
