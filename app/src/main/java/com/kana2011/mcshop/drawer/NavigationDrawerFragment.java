@@ -1,6 +1,7 @@
 package com.kana2011.mcshop.drawer;
 
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
 
 import com.kana2011.mcshop.HomeActivity;
@@ -107,7 +109,7 @@ public class NavigationDrawerFragment extends Fragment implements DrawerLayout.D
         return data;
     }
 
-    public void setUp(int fragmentId, DrawerLayout drawerLayout, Toolbar toolbar) {
+    public void setUp(int fragmentId, final DrawerLayout drawerLayout, Toolbar toolbar) {
         containerView = getActivity().findViewById(fragmentId);
         mDrawerLayout = drawerLayout;
         mDrawerToggle = new ActionBarDrawerToggle(getActivity(), drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
@@ -138,6 +140,16 @@ public class NavigationDrawerFragment extends Fragment implements DrawerLayout.D
             }
         });
         mDrawerLayout.setDrawerListener(this);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(HomeActivity.getInstance().getCurrentFragment() == 0) {
+                    mDrawerLayout.openDrawer(getView());
+                } else {
+                    HomeActivity.getInstance().showShop();
+                }
+            }
+        });
     }
 
     public static void saveToPreferences(Context context, String preferenceName, String preferenceValue) {

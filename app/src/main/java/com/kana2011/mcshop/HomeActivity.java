@@ -114,14 +114,37 @@ public class HomeActivity extends ActionBarActivity {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
         transaction.replace(R.id.main_fragment, fragments.get(index));
-        //transaction.addToBackStack(null);
 
         transaction.commit();
 
         currentFragment = index;
     }
 
+    public void showShop() {
+        showFragment(0);
+        ValueAnimator anim = ValueAnimator.ofFloat(1, 0);
+        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                float slideOffset = (Float) valueAnimator.getAnimatedValue();
+                drawerFragment.getDrawerToggle().onDrawerSlide(drawerFragment.getView(), slideOffset);
+            }
+        });
+        anim.setInterpolator(new DecelerateInterpolator());
+        anim.setDuration(300);
+        anim.start();
+    }
+
     public int getCurrentFragment() {
         return currentFragment;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(currentFragment == 0) {
+            super.onBackPressed();
+        } else {
+            showShop();
+        }
     }
 }
