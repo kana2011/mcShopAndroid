@@ -47,7 +47,7 @@ public class ShopFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_shop,container, false);
 
         mPager = (ViewPager)rootView.findViewById(R.id.pager);
-        mPager.setAdapter(new McShopPagerAdapter(getActivity().getSupportFragmentManager()));
+        mPager.setAdapter(new McShopPagerAdapter(getChildFragmentManager()));
         mTabs = (SlidingTabLayout)rootView.findViewById(R.id.tabs);
         mTabs.setViewPager(mPager);
         mTabs.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
