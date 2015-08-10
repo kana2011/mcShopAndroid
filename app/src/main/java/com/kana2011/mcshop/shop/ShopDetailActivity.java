@@ -1,6 +1,7 @@
 package com.kana2011.mcshop.shop;
 
 import android.animation.Animator;
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -109,7 +110,7 @@ public class ShopDetailActivity extends ActionBarActivity implements OnScrollCha
         mToolbar = (Toolbar)findViewById(R.id.app_bar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mStatusBarTint = (View)findViewById(R.id.tint);
 

@@ -73,19 +73,16 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
 
         @Override
         public void onClick(View v) {
-            HomeActivity.getInstance().getDrawerFragment().getDrawerLayout().closeDrawers();
-            System.out.println(getPosition());
             switch(getPosition()) {
-                case 0:
-                    break;
                 case 4:
                     Intent settingsIntent = new Intent(HomeActivity.getInstance(), SettingsActivity.class);
                     HomeActivity.getInstance().startActivity(settingsIntent);
                     break;
                 default:
-                    //HomeActivity.getInstance().showFragment(getPosition());
+                    HomeActivity.getInstance().showFragment(getPosition());
                     break;
             }
+            HomeActivity.getInstance().getDrawerFragment().getDrawerLayout().closeDrawers();
         }
     }
 }

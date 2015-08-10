@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.kana2011.mcshop.HomeActivity;
 import com.kana2011.mcshop.R;
 import com.kana2011.mcshop.libs.SimpleSectionedRecyclerViewAdapter;
 
@@ -27,7 +28,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class NavigationDrawerFragment extends Fragment {
+public class NavigationDrawerFragment extends Fragment implements DrawerLayout.DrawerListener {
     private RecyclerView recyclerView;
     public static final String PREFS_NAME = "com.kana2011.mcShop";
     public static final String KEY_USER_LEARNED_DRAWER = "user_learned_drawer";
@@ -136,7 +137,7 @@ public class NavigationDrawerFragment extends Fragment {
                 mDrawerToggle.syncState();
             }
         });
-
+        mDrawerLayout.setDrawerListener(this);
     }
 
     public static void saveToPreferences(Context context, String preferenceName, String preferenceValue) {
@@ -157,5 +158,33 @@ public class NavigationDrawerFragment extends Fragment {
 
     public RecyclerView getRecyclerView() {
         return recyclerView;
+    }
+
+    public ActionBarDrawerToggle getDrawerToggle() {
+        return mDrawerToggle;
+    }
+
+    @Override
+    public void onDrawerSlide(View drawerView, float slideOffset) {
+        if(HomeActivity.getInstance().getCurrentFragment() == 0) {
+            mDrawerToggle.onDrawerSlide(drawerView, slideOffset);
+        } else {
+            mDrawerToggle.onDrawerSlide(drawerView, 1);
+        }
+    }
+
+    @Override
+    public void onDrawerOpened(View drawerView) {
+
+    }
+
+    @Override
+    public void onDrawerClosed(View drawerView) {
+
+    }
+
+    @Override
+    public void onDrawerStateChanged(int newState) {
+
     }
 }

@@ -1,5 +1,6 @@
 package com.kana2011.mcshop;
 
+import android.animation.ValueAnimator;
 import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -14,10 +15,12 @@ import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.DecelerateInterpolator;
 
 import com.kana2011.mcshop.drawer.NavigationDrawerFragment;
 import com.kana2011.mcshop.libs.McShop;
 import com.kana2011.mcshop.shop.ShopFragment;
+import com.kana2011.mcshop.topup.TopupFragment;
 import com.kana2011.mcshop.utils.Util;
 
 import org.apache.http.NameValuePair;
@@ -37,6 +40,7 @@ public class HomeActivity extends ActionBarActivity {
     private Toolbar toolbar;
     private static HomeActivity instance;
     private JSONObject userInfo;
+    private int currentFragment = 0;
 
     private List<Fragment> fragments = new ArrayList<>();
 
@@ -73,6 +77,7 @@ public class HomeActivity extends ActionBarActivity {
         ShopFragment fragment = new ShopFragment();
         fragment.setGroupsInfo(groups);
         fragments.add(fragment);
+        fragments.add(new TopupFragment());
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -93,15 +98,6 @@ public class HomeActivity extends ActionBarActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        /*
-        if (id == R.id.action_settings) {
-            Intent settingsIntent = new Intent(HomeActivity.this, SettingsActivity.class);
-            startActivity(settingsIntent);
-            return true;
-        }*/
 
         return super.onOptionsItemSelected(item);
     }
@@ -118,8 +114,14 @@ public class HomeActivity extends ActionBarActivity {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
         transaction.replace(R.id.main_fragment, fragments.get(index));
-        transaction.addToBackStack(null);
+        //transaction.addToBackStack(null);
 
         transaction.commit();
+
+        currentFragment = index;
+    }
+
+    public int getCurrentFragment() {
+        return currentFragment;
     }
 }
