@@ -1,7 +1,6 @@
 package com.kana2011.mcshop.drawer;
 
 
-import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -14,12 +13,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
 
 import com.kana2011.mcshop.HomeActivity;
-import com.kana2011.mcshop.R;
-import com.kana2011.mcshop.libs.SimpleSectionedRecyclerViewAdapter;
+
+import xyz.paphonb.mcshop.R;
+import xyz.paphonb.mcshop.libs.SimpleSectionedRecyclerViewAdapter;
 
 import org.json.simple.JSONObject;
 
@@ -112,7 +111,7 @@ public class NavigationDrawerFragment extends Fragment implements DrawerLayout.D
     public void setUp(int fragmentId, final DrawerLayout drawerLayout, Toolbar toolbar) {
         containerView = getActivity().findViewById(fragmentId);
         mDrawerLayout = drawerLayout;
-        mDrawerToggle = new ActionBarDrawerToggle(getActivity(), drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
+        mDrawerToggle = new ActionBarDrawerToggle(getActivity(), drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
@@ -143,11 +142,11 @@ public class NavigationDrawerFragment extends Fragment implements DrawerLayout.D
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(HomeActivity.getInstance().getCurrentFragment() == 0) {
-                    mDrawerLayout.openDrawer(getView());
-                } else {
-                    HomeActivity.getInstance().showShop();
-                }
+            if(HomeActivity.getInstance().getCurrentFragment() == 0) {
+                mDrawerLayout.openDrawer(getView());
+            } else {
+                HomeActivity.getInstance().showShop();
+            }
             }
         });
     }

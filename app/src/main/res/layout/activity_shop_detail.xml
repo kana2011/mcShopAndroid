@@ -1,80 +1,44 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.kana2011.mcshop.shop.ShopDetailActivity">
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:fitsSystemWindows="true"
+    tools:context="xyz.paphonb.mcshop.shop.ShopDetailActivity">
 
-    <com.kana2011.mcshop.libs.ObservableScrollView
-        android:id="@+id/scroll_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true">
+    <android.support.design.widget.AppBarLayout android:id="@+id/app_bar"
+        android:fitsSystemWindows="true" android:layout_height="@dimen/app_bar_height"
+        android:layout_width="match_parent" android:theme="@style/AppTheme.AppBarOverlay" android:background="@drawable/ic_material">
 
-        <RelativeLayout
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true"
+            app:contentScrim="?attr/colorPrimary"
+            app:expandedTitleMarginEnd="64dp"
+            app:expandedTitleMarginStart="48dp"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <ImageView
-                android:id="@+id/item_photo"
-                android:layout_width="match_parent"
-                android:layout_height="206dp"
-                android:scaleType="centerCrop"
                 android:src="@drawable/ic_material"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"/>
-
-            <RelativeLayout
-                android:id="@+id/item_info"
+                app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
                 android:layout_width="match_parent"
-                android:layout_height="1000dp"
-                android:layout_below="@id/item_photo"
-                android:background="@color/md_grey_100"
-                android:visibility="invisible">
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                app:layout_collapseMode="parallax"
+                android:minHeight="100dp" />
 
-                <TextView
-                    android:id="@+id/item_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="16dp"
-                    android:textSize="24sp"
-                    android:textColor="@color/md_black_1000"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true" />
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                app:layout_scrollFlags="scroll|enterAlways" />
 
-                <Button
-                    android:id="@+id/buy_button"
-                    android:layout_width="120dp"
-                    android:layout_height="wrap_content"
-                    android:text="@string/get"
-                    android:textColor="@color/md_white_1000"
-                    android:layout_margin="12dp"
-                    android:padding="12dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true" />
+        </android.support.design.widget.CollapsingToolbarLayout>
+    </android.support.design.widget.AppBarLayout>
 
-            </RelativeLayout>
+    <include layout="@layout/content_shop_detail" />
 
-        </RelativeLayout>
-
-    </com.kana2011.mcshop.libs.ObservableScrollView>
-
-    <View
-        android:id="@+id/tint"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/app_bar_top_padding"
-        android:layout_alignParentTop="true"
-        android:background="#50000000"/>
-
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/app_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/dropshadow"
-        android:layout_below="@id/tint"
-        app:theme="@style/McShopToolbarTheme"
-        app:popupTheme="@style/McShopToolbarPopupTheme"/>
-
-</RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>

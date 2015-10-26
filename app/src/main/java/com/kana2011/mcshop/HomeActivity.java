@@ -5,29 +5,26 @@ import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 
 import com.kana2011.mcshop.drawer.NavigationDrawerFragment;
-import com.kana2011.mcshop.libs.McShop;
-import com.kana2011.mcshop.shop.ShopFragment;
-import com.kana2011.mcshop.topup.TopupFragment;
-import com.kana2011.mcshop.utils.Util;
+
+import xyz.paphonb.mcshop.R;
+import xyz.paphonb.mcshop.libs.McShop;
+import xyz.paphonb.mcshop.shop.ShopFragment;
+import xyz.paphonb.mcshop.topup.TopupFragment;
 
 import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +43,8 @@ public class HomeActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        /*
+
         super.onCreate(savedInstanceState);
 
         this.instance = this;
@@ -84,12 +83,14 @@ public class HomeActivity extends ActionBarActivity {
 
         fragmentTransaction.add(R.id.main_fragment, fragment);
         fragmentTransaction.commit();
+
+        */
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_home, menu);
+        //getMenuInflater().inflate(R.menu.menu_home, menu);
         return true;
     }
 

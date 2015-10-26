@@ -1,20 +1,22 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.kana2011.mcshop.SettingsActivity">
+    tools:context="xyz.paphonb.mcshop.shop.ShopDetailActivity">
 
-    <View
-        android:id="@+id/tint"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/app_bar_top_padding"
-        android:background="@color/md_light_blue_700"/>
+    <android.support.design.widget.AppBarLayout android:id="@+id/app_bar"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_width="match_parent" android:theme="@style/AppTheme.AppBarOverlay">
 
-    <include
-        android:id="@+id/app_bar"
-        layout="@layout/app_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tint"/>
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:layout_collapseMode="pin"
+            app:layout_scrollFlags="scroll|enterAlways" />
+    </android.support.design.widget.AppBarLayout>
 
     <LinearLayout
         android:id="@+id/settings_fragment"
@@ -23,13 +25,7 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/app_bar"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/elevation_app_bar"
-        android:layout_below="@id/app_bar"
-        android:background="@drawable/dropshadow"
-        android:layout_marginBottom="-8dp"/>
-
-</RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>

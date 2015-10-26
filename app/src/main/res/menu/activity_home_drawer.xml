@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item android:id="@+id/nav_shop" android:icon="@drawable/ic_shopping_cart"
+            android:title="Shop" />
+        <item android:id="@+id/nav_topup" android:icon="@drawable/ic_credit_card"
+            android:title="Topup" />
+        <item android:id="@+id/nav_transactions" android:icon="@drawable/ic_view_headline"
+            android:title="Transactions" />
+    </group>
+
+    <item android:title="Settings">
+        <menu>
+            <item android:id="@+id/nav_settings" android:icon="@drawable/ic_settings"
+                android:title="Settings" />
+        </menu>
+    </item>
+
+</menu>

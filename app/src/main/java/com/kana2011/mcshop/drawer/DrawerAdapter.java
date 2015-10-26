@@ -1,7 +1,5 @@
 package com.kana2011.mcshop.drawer;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
@@ -10,12 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.kana2011.mcshop.HomeActivity;
-import com.kana2011.mcshop.R;
-import com.kana2011.mcshop.SettingsActivity;
-import com.kana2011.mcshop.SettingsFragment;
+
+import xyz.paphonb.mcshop.R;
+import xyz.paphonb.mcshop.SettingsActivity;
 
 import java.util.Collections;
 import java.util.List;

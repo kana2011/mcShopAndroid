@@ -13,8 +13,8 @@
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
-    <string name="drawer_open">Open</string>
-    <string name="drawer_close">Close</string>
+    <string name="navigation_drawer_open">Open Navigation Drawer</string>
+    <string name="navigation_drawer_close">Close Navigation Drawer</string>
 
     <string name="title_activity_settings">Settings</string>
     <string name="settings_authentication">Authentication</string>
@@ -31,5 +31,9 @@
     <string name="blank"></string>
 
     <string name="get">Get</string>
+    <string name="title_activity_scrolling">ScrollingActivity</string>
+    <string name="large_text">
+        "WIP"
+    </string>
 
 </resources>

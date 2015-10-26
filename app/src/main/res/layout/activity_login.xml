@@ -7,8 +7,8 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:fitsSystemWindows="true"
     android:clipToPadding="false"
-    android:background="@color/md_light_green_500"
-    tools:context="com.kana2011.mcshop.LoginActivity">
+    android:background="@color/colorPrimary"
+    tools:context="xyz.paphonb.mcshop.LoginActivity">
 
     <!-- Login progress -->
     <ProgressBar android:id="@+id/login_progress" style="?android:attr/progressBarStyleLarge"
@@ -41,7 +41,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|center_horizontal"
                 android:layout_alignParentBottom="true"
-                android:background="@color/md_light_green_500"
+                android:background="@color/colorPrimary"
                 android:focusable="true"
                 android:focusableInTouchMode="true">
 
@@ -54,6 +54,7 @@
                     android:layout_marginBottom="16dp"
                     android:layout_marginLeft="16dp"
                     android:layout_marginRight="16dp"
+                    android:text="192.168.10.134"
                     android:textColor="@color/md_white_1000"
                     android:textColorHint="@color/md_white_1000_75"/>
 
@@ -66,6 +67,7 @@
                     android:layout_marginBottom="16dp"
                     android:layout_marginLeft="16dp"
                     android:layout_marginRight="16dp"
+                    android:text="test"
                     android:textColor="@color/md_white_1000"
                     android:textColorHint="@color/md_white_1000_75"/>
 
@@ -80,6 +82,7 @@
                     android:layout_marginBottom="16dp"
                     android:layout_marginLeft="16dp"
                     android:layout_marginRight="16dp"
+                    android:text="test"
                     android:textColor="@color/md_white_1000"
                     android:textColorHint="@color/md_white_1000_75"/>
 
