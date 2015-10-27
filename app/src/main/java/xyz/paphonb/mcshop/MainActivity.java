@@ -11,6 +11,7 @@ import android.support.v7.app.AlertDialog;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 
 import xyz.paphonb.mcshop.libs.McShop;
 import xyz.paphonb.mcshop.utils.Util;
@@ -25,14 +26,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends ActionBarActivity {
+    private static MainActivity instance;
     public String PREFS_NAME = "xyz.paphonb.mcShop";
     public static SharedPreferences settings;
     public static int currentCredential = 0;
+    private JSONArray credentials;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        instance = this;
 
         final MainActivity context = this;
 
@@ -43,7 +48,7 @@ public class MainActivity extends ActionBarActivity {
                 if(settings.contains("credentials")) {
                     JSONParser parser = new JSONParser();
                     try {
-                        final JSONArray credentials = (JSONArray)parser.parse(settings.getString("credentials", "[]"));
+                        credentials = (JSONArray)parser.parse(settings.getString("credentials", "[]"));
                         if (credentials.size() >= (settings.getInt("currentCredential", 0) + 1)) {
                             String token = (String)((JSONObject)credentials.get(settings.getInt("currentCredential", 0))).get("token");
                             String res = context.checkAuth(token);
@@ -63,16 +68,7 @@ public class MainActivity extends ActionBarActivity {
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                                        builder.setMessage("No connection.")
-                                                .setCancelable(false)
-                                                .setPositiveButton("Exit", new DialogInterface.OnClickListener() {
-                                                    public void onClick(DialogInterface dialog, int id) {
-                                                        context.finish();
-                                                    }
-                                                });
-                                        AlertDialog alert = builder.create();
-                                        alert.show();
+                                        selectAccountDialog();
                                     }
                                 });
                             } else {
@@ -170,6 +166,10 @@ public class MainActivity extends ActionBarActivity {
         finish();
     }
 
+    public static MainActivity getInstance() {
+        return instance;
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -185,5 +185,11 @@ public class MainActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void selectAccountDialog() {
+        Intent selectAccountIntent = new Intent(this, SelectAccountActivity.class);
+        startActivity(selectAccountIntent);
+        finish();
     }
 }

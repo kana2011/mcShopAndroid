@@ -60,16 +60,26 @@ public class SettingsFragment extends PreferenceFragment {
         dialogBasedPrefCat.setTitle(R.string.settings_authentication);
         root.addPreference(dialogBasedPrefCat);
 
+        /*
         ListPreference accountsPreference = new ListPreference(context);
         accountsPreference.setTitle(R.string.settings_accounts);
         accountsPreference.setSummary(R.string.settings_accounts_summary);
         accountsPreference.setDialogTitle(R.string.settings_accounts);
         accountsPreference.setDefaultValue(settings.getInt("currentCredential", 0) + "");
+        */
+
+        Preference accountsPreference = new Preference(context);
+        accountsPreference.setTitle(R.string.settings_accounts);
+        accountsPreference.setSummary(R.string.settings_accounts_summary);
 
         Preference signoutPreference = new Preference(context);
         signoutPreference.setTitle(R.string.settings_signout);
         signoutPreference.setSummary(R.string.settings_signout_summary);
 
+        dialogBasedPrefCat.addPreference(accountsPreference);
+        dialogBasedPrefCat.addPreference(signoutPreference);
+
+        /*
         List<String> accounts = new ArrayList<>();
         List<String> accountsIndex = new ArrayList<>();
 
@@ -169,6 +179,17 @@ public class SettingsFragment extends PreferenceFragment {
                 return true;
             }
         });
+        */
+        accountsPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                Intent selectAccountIntent = new Intent(getActivity(), SelectAccountActivity.class);
+                startActivity(selectAccountIntent);
+                getActivity().finish();
+                HomeActivity.getInstance().finish();
+                return true;
+            }
+        });
         signoutPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
@@ -235,6 +256,7 @@ public class SettingsFragment extends PreferenceFragment {
         return inflater.inflate(R.layout.fragment_settings, container, false);
     }
 
+    /*
     public String checkAuth(String token) {
         try {
             JSONParser parser = new JSONParser();
@@ -252,5 +274,6 @@ public class SettingsFragment extends PreferenceFragment {
             return "error";
         }
     }
+    */
 
 }
