@@ -41,6 +41,10 @@ public class McShop {
         return getPrefs(context).getInt("currentCredential", 0);
     }
 
+    public static String getAddress(JSONObject credential) {
+        return (String)credential.get("address");
+    }
+
     public static JSONArray getJsonArray(String json) {
         JSONParser parser = new JSONParser();
         try {
@@ -93,14 +97,22 @@ public class McShop {
                                     nameValuePairList.add(new BasicNameValuePair("itemid", Integer.toString(itemId)));
                                     String fuck = postData(McShop.getCurrentCredential(context), "/api/shop:buy", nameValuePairList);
                                     JSONObject result = getJsonObject(postData(McShop.getCurrentCredential(context), "/api/shop:buy", nameValuePairList));
-                                    if((boolean)result.get("status")) {
-                                        Snackbar snackbar = Snackbar.make(context.getContentView(), "Item bought",
-                                                Snackbar.LENGTH_LONG);
-                                        View snackBarView = snackbar.getView();
-                                        snackBarView.setBackgroundColor(context.getResources().getColor(R.color.md_green_500));
-                                        snackbar.show();
+                                    if(result != null) {
+                                        if ((boolean) result.get("status")) {
+                                            Snackbar snackbar = Snackbar.make(context.getContentView(), "Item bought",
+                                                    Snackbar.LENGTH_LONG);
+                                            View snackBarView = snackbar.getView();
+                                            snackBarView.setBackgroundColor(context.getResources().getColor(R.color.md_green_500));
+                                            snackbar.show();
+                                        } else {
+                                            Snackbar snackbar = Snackbar.make(context.getContentView(), capitalizeFirstLetter(lodashToSpace((String) result.get("error"))) + ".",
+                                                    Snackbar.LENGTH_LONG);
+                                            View snackBarView = snackbar.getView();
+                                            snackBarView.setBackgroundColor(context.getResources().getColor(R.color.md_red_500));
+                                            snackbar.show();
+                                        }
                                     } else {
-                                        Snackbar snackbar = Snackbar.make(context.getContentView(), capitalizeFirstLetter(lodashToSpace((String)result.get("error"))),
+                                        Snackbar snackbar = Snackbar.make(context.getContentView(), "No connection.",
                                                 Snackbar.LENGTH_LONG);
                                         View snackBarView = snackbar.getView();
                                         snackBarView.setBackgroundColor(context.getResources().getColor(R.color.md_red_500));

@@ -36,6 +36,7 @@ import xyz.paphonb.mcshop.utils.Util;
 public class SettingsFragment extends PreferenceFragment {
     private SharedPreferences settings;
     public String PREFS_NAME = "xyz.paphonb.mcShop";
+    private JSONArray credentialsList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -92,7 +93,7 @@ public class SettingsFragment extends PreferenceFragment {
 
         dialogBasedPrefCat.addPreference(signoutPreference);
 
-        final JSONArray credentialsList = credentials;
+        credentialsList = credentials;
         accountsPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -130,6 +131,36 @@ public class SettingsFragment extends PreferenceFragment {
                                         HomeActivity.getInstance().finish();
                                     }
                                 });
+                            } else if(res.equals("error")) {
+                                runOnUiThread(context, new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        progress.dismiss();
+                                        HomeActivity.getInstance().finish();
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                                        builder.setMessage("No connection.")
+                                                .setCancelable(false)
+                                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int id) {
+                                                        //context.finish();
+                                                        //HomeActivity.getInstance().finish();
+                                                    }
+                                                });
+                                        AlertDialog alert = builder.create();
+                                        alert.show();
+                                    }
+                                });
+                            } else {
+                                deleteCurrentCredential();
+                                runOnUiThread(context, new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Intent mainIntent = new Intent(getActivity(), MainActivity.class);
+                                        startActivity(mainIntent);
+                                        getActivity().finish();
+                                        HomeActivity.getInstance().finish();
+                                    }
+                                });
                             }
                         }
                     }).start();
@@ -147,22 +178,7 @@ public class SettingsFragment extends PreferenceFragment {
                         .setPositiveButton(R.string.settings_signout, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 //server-side token deletion not implemented.
-                                int position = settings.getInt("currentCredential", 0);
-                                JSONArray list = new JSONArray();
-                                JSONArray jsonArray = credentialsList;
-                                int len = jsonArray.size();
-                                if (jsonArray != null) {
-                                    for (int i = 0; i < len; i++) {
-                                        //Excluding the item at position
-                                        if (i != position) {
-                                            list.add(jsonArray.get(i));
-                                        }
-                                    }
-                                }
-                                SharedPreferences.Editor editor = settings.edit();
-                                editor.putString("credentials", list.toString());
-                                editor.putInt("currentCredential", 0);
-                                editor.commit();
+                                deleteCurrentCredential();
                                 Intent mainIntent = new Intent(getActivity(), MainActivity.class);
                                 startActivity(mainIntent);
                                 getActivity().finish();
@@ -180,6 +196,30 @@ public class SettingsFragment extends PreferenceFragment {
         });
 
         return root;
+    }
+
+    private void deleteCredential(int position) {
+        //int position = settings.getInt("currentCredential", 0);
+        JSONArray list = new JSONArray();
+        JSONArray jsonArray = credentialsList;
+        int len = jsonArray.size();
+        if (jsonArray != null) {
+            for (int i = 0; i < len; i++) {
+                //Excluding the item at position
+                if (i != position) {
+                    list.add(jsonArray.get(i));
+                }
+            }
+        }
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("credentials", list.toString());
+        editor.putInt("currentCredential", 0);
+        editor.commit();
+    }
+
+    private void deleteCurrentCredential() {
+        int position = settings.getInt("currentCredential", 0);
+        deleteCredential(position);
     }
 
     public static void runOnUiThread(Context context, Runnable runnable) {
