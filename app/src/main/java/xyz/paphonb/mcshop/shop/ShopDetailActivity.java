@@ -1,6 +1,8 @@
 package xyz.paphonb.mcshop.shop;
 
+import android.annotation.TargetApi;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -8,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 
@@ -34,6 +37,12 @@ public class ShopDetailActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().getDecorView().setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+        }
+
         mContentView = findViewById(android.R.id.content);
 
         mItemPhoto = (ImageView) findViewById(R.id.item_photo);
@@ -52,7 +61,7 @@ public class ShopDetailActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(itemName);
 
         final ShopDetailActivity context = this;
-        mBuyButton = (Button)findViewById(R.id.buy_button);
+        mBuyButton = (Button) findViewById(R.id.buy_button);
         if((int)(long)itemInfo.get("price") != 0) {
             mBuyButton.setText(McShop.getCurrencyUnit() + Integer.toString((int) (long) itemInfo.get("price")));
         }

@@ -27,16 +27,12 @@
         </activity>
         <activity
             android:name=".SettingsActivity"
-            android:label="@string/title_activity_settings"
-            android:parentActivityName=".HomeActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.kana2011.mcshop.HomeActivity" />
+            android:label="@string/title_activity_settings" >
         </activity>
         <activity
             android:name=".shop.ShopDetailActivity"
             android:label="@string/title_activity_shop_detail"
-            android:theme="@style/AppTheme" >
+            android:theme="@style/AppTheme.TransparentStatusBar" >
         </activity>
         <activity
             android:name=".HomeActivity"
